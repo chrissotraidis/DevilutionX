@@ -4,18 +4,18 @@
 namespace devilution {
 
 const char *const CreditLines[] = {
-#ifdef __IOS__
 	"DevilTouch - modified DevilutionX 1.5.5",
 	"DevilutionX contributors - Sustainable Use License",
 	"mpqfs contributors (c) 2025 - MIT License",
 	"SDL_audiolib (c) 2014-2019 Nikos Chantziaras",
 	"GNU LGPL version 3 or later",
-	"libsmackerdec - GNU LGPL version 2.1 or later",
+	"libsmackerdec (c) 2011 Barry Duncan",
+	"FFmpeg Smacker (c) 2006 Konstantin Shishkov",
+	"GNU LGPL version 2.1 or later",
 	"License copies, credits and rebuild instructions:",
 	"Notices in this app bundle and the GitHub release",
 	"github.com/chrissotraidis/deviltouch/releases",
 	"",
-#endif
 	N_("Game Design"),
 	"	Blizzard North",
 	"",

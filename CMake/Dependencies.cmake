@@ -13,7 +13,7 @@ else()
 endif()
 
 if(SUPPORTS_MPQ)
-  # bzip2 is a libmpq dependency.
+  # bzip2 is a mpqfs dependency.
   if(EMSCRIPTEN)
     emscripten_system_library("bzip2" BZip2::BZip2 USE_BZIP2=1)
   else()
@@ -186,7 +186,7 @@ else()
 endif()
 
 if(SUPPORTS_MPQ)
-  add_subdirectory(3rdParty/libmpq)
+  add_subdirectory(3rdParty/mpqfs)
 endif()
 
 add_subdirectory(3rdParty/tl)

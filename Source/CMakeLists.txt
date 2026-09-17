@@ -171,7 +171,7 @@ set(libdevilutionx_SRCS
   utils/utf8.cpp)
 
 if(SUPPORTS_MPQ)
-  list(APPEND libdevilutionx_DEPS libmpq)
+  list(APPEND libdevilutionx_DEPS mpqfs)
   list(APPEND libdevilutionx_SRCS
     mpq/mpq_reader.cpp
     mpq/mpq_sdl_rwops.cpp

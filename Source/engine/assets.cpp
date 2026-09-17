@@ -54,9 +54,8 @@ SDL_RWops *OpenOptionalRWops(const std::string &path)
 
 bool FindMpqFile(const char *filename, MpqArchive **archive, uint32_t *fileNumber)
 {
-	const MpqArchive::FileHash fileHash = MpqArchive::CalculateFileHash(filename);
 	const auto at = [=](std::optional<MpqArchive> &src) -> bool {
-		if (src && src->GetFileNumber(fileHash, *fileNumber)) {
+		if (src && src->GetFileNumber(filename, *fileNumber)) {
 			*archive = &(*src);
 			return true;
 		}

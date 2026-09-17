@@ -207,9 +207,8 @@ bool AreExtraFontsOutOfDate(const std::string &path)
 bool AreExtraFontsOutOfDate(MpqArchive &archive)
 {
 	const char filename[] = "fonts\\VERSION";
-	const MpqArchive::FileHash fileHash = MpqArchive::CalculateFileHash(filename);
 	uint32_t fileNumber;
-	if (!archive.GetFileNumber(fileHash, fileNumber))
+	if (!archive.GetFileNumber(filename, fileNumber))
 		return true;
 	AssetRef ref;
 	ref.archive = &archive;

@@ -6,6 +6,15 @@
 
 namespace devilution {
 
+#ifndef USE_SDL1
+// SDL also emits a synthetic mouse event for each finger event. Tag the mouse
+// event translated by DevilutionX separately so the engine can discard only
+// SDL's duplicate while retaining native click behavior.
+constexpr Uint32 DevilutionTouchMouseId = SDL_TOUCH_MOUSEID - 1;
+
+bool IsDirectTouchEvent(const SDL_TouchFingerEvent &event);
+#endif
+
 class VirtualDirectionPadEventHandler {
 public:
 	VirtualDirectionPadEventHandler(VirtualDirectionPad *virtualDirectionPad)
@@ -88,6 +97,6 @@ private:
 	VirtualButtonEventHandler manaButtonEventHandler;
 };
 
-void HandleTouchEvent(const SDL_Event &event);
+void HandleTouchEvent(SDL_Event &event);
 
 } // namespace devilution

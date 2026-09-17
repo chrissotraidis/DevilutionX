@@ -183,6 +183,16 @@ void FreeModifierHints()
 
 void DrawControllerModifierHints(const Surface &out)
 {
+#ifdef __IPHONEOS__
+	// These hints are for a physical gamepad modifier. A missed release must not
+	// leave a spell icon floating over the iPad touch/pointer interface.
+	if (ControlDevice != ControlTypes::Gamepad) {
+		PadMenuNavigatorActive = false;
+		PadHotspellMenuActive = false;
+		return;
+	}
+#endif
+
 	DrawGamepadMenuNavigator(out);
 	DrawGamepadHotspellMenu(out);
 }

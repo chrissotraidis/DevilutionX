@@ -124,7 +124,7 @@ bool UiProgressDialog(int (*fnfunc)())
 		DrawMouse();
 		UiFadeIn();
 
-		while (PollEvent(&event) != 0) {
+		while (PollUiEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:

@@ -101,7 +101,7 @@ void StorePrior();
 void StoreNext();
 void TakePlrsMoney(int cost);
 void StoreEnter();
-void CheckStoreBtn();
+void CheckStoreBtn(bool requireSecondClick = true);
 void ReleaseStoreBtn();
 
 } // namespace devilution

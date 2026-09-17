@@ -80,7 +80,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)());
 void gmenu_draw(const Surface &out);
 bool gmenu_presskeys(SDL_Keycode vkey);
 bool gmenu_on_mouse_move();
-bool gmenu_left_mouse(bool isDown);
+bool gmenu_left_mouse(bool isDown, bool requireSecondClick = true);
 
 /**
  * @brief Set the TMenuItem slider position based on the given value

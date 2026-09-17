@@ -2746,7 +2746,7 @@ void StoreEnter()
 	}
 }
 
-void CheckStoreBtn()
+void CheckStoreBtn(bool requireSecondClick)
 {
 	const Point uiPosition = GetUIRectangle().position;
 	if (qtextflag) {
@@ -2806,8 +2806,12 @@ void CheckStoreBtn()
 				}
 			}
 			if (stext[y].isSelectable() || (stextscrl && y == BackButtonLine())) {
+				const bool wasSelected = stextsel == y;
 				stextsel = y;
-				StoreEnter();
+				if (requireSecondClick && !wasSelected)
+					PlaySFX(IS_TITLEMOV);
+				else
+					StoreEnter();
 			}
 		}
 	}

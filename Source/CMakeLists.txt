@@ -184,7 +184,9 @@ if(SUPPORTS_MPQ OR NOT NONET)
 endif()
 
 if(IOS)
-  list(APPEND libdevilutionx_SRCS platform/ios/ios_paths.m)
+  list(APPEND libdevilutionx_SRCS
+    platform/ios/ios_paths.m
+    "${CMAKE_CURRENT_LIST_DIR}/../../../platform/ios/game_data_import.m")
 endif()
 
 if(USE_SDL1)

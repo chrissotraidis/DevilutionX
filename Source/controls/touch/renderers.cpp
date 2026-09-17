@@ -11,6 +11,7 @@
 #include "inv.h"
 #include "levels/gendung.h"
 #include "minitext.h"
+#include "options.h"
 #include "panels/ui_panels.hpp"
 #include "qol/stash.h"
 #include "stores.h"
@@ -263,20 +264,31 @@ void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 	if (CurrentEventHandler == DisableInputEventHandler)
 		return;
 
+#ifdef __IPHONEOS__
+	// Native panels are directly touchable. Hide the overlay while they are open
+	// so it never covers their controls.
+	if (!*sgOptions.Controller.showTouchControls || IsLeftPanelOpen() || IsRightPanelOpen())
+		return;
+#endif
+
 	primaryActionButtonRenderer.Render(renderFunction, buttonArt);
 	secondaryActionButtonRenderer.Render(renderFunction, buttonArt);
 	spellActionButtonRenderer.Render(renderFunction, buttonArt);
 	cancelButtonRenderer.Render(renderFunction, buttonArt);
+#ifndef __IPHONEOS__
 	healthButtonRenderer.Render(renderFunction, buttonArt);
 	manaButtonRenderer.Render(renderFunction, buttonArt);
 
 	healthButtonRenderer.RenderPotion(renderFunction, potionArt);
 	manaButtonRenderer.RenderPotion(renderFunction, potionArt);
+#endif
 
 	if (leveltype != DTYPE_TOWN)
 		standButtonRenderer.Render(renderFunction, buttonArt);
 	directionPadRenderer.Render(renderFunction);
+#ifndef __IPHONEOS__
 	menuPanelRenderer.Render(renderFunction);
+#endif
 }
 
 void VirtualMenuPanelRenderer::Render(RenderFunction renderFunction)

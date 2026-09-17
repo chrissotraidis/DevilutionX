@@ -32,6 +32,10 @@
 #include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
 
+#ifdef __IPHONEOS__
+#include "../../../platform/ios/game_data_import.h"
+#endif
+
 #ifndef UNPACKED_MPQS
 #include "mpq/mpq_reader.hpp"
 #endif
@@ -319,17 +323,26 @@ void LoadGameArchives()
 		diablo_quit(1);
 	}
 #else // !UNPACKED_MPQS
-	diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
-	if (!diabdat_mpq) {
-		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
-		diabdat_mpq = LoadMPQ(paths, "diabdat.mpq");
-	}
+	auto loadBaseArchive = [&paths]() {
+		diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
+		if (!diabdat_mpq) {
+			// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
+			diabdat_mpq = LoadMPQ(paths, "diabdat.mpq");
+		}
 
-	if (!diabdat_mpq) {
-		spawn_mpq = LoadMPQ(paths, "spawn.mpq");
-		if (spawn_mpq)
-			gbIsSpawn = true;
+		if (!diabdat_mpq) {
+			spawn_mpq = LoadMPQ(paths, "spawn.mpq");
+			if (spawn_mpq)
+				gbIsSpawn = true;
+		}
+	};
+	loadBaseArchive();
+#ifdef __IPHONEOS__
+	if (!HeadlessMode && !diabdat_mpq && !spawn_mpq && DevilTouchImportGameData() > 0) {
+		paths = GetMPQSearchPaths();
+		loadBaseArchive();
 	}
+#endif
 	if (!HeadlessMode) {
 		AssetRef ref = FindAsset("ui_art\\title.pcx");
 		if (!ref.ok()) {

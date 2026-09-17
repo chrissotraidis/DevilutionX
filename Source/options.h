@@ -614,6 +614,9 @@ struct ControllerOptions : OptionCategoryBase {
 	ControllerOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
+	/** @brief Show the optional on-screen movement and action controls. */
+	OptionEntryBoolean showTouchControls;
+
 	/** @brief SDL Controller mapping, see SDL_GameControllerDB. */
 	char szMapping[1024];
 	/** @brief Configure gamepad joysticks deadzone */

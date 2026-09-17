@@ -143,7 +143,7 @@ bool TextDialog(char const *const *text, std::size_t textLines)
 	do {
 		creditsRenderer.Render();
 		UiFadeIn();
-		while (PollEvent(&event) != 0) {
+		while (PollUiEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_KEYDOWN:
 			case SDL_MOUSEBUTTONUP:

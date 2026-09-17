@@ -694,6 +694,15 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	const ClxSprite sprite = item.AnimInfo.currentSprite();
 	int px = targetBufferPosition.x - CalculateWidth2(sprite.width());
 	const Point position { px, targetBufferPosition.y };
+#ifdef __IPHONEOS__
+	if (item._iSelFlag != 0) {
+		const int zoomFactor = *sgOptions.Graphics.zoom ? 2 : 1;
+		AddRenderedItemTarget(static_cast<int8_t>(bItem - 1), {
+		    { position.x * zoomFactor, (position.y - sprite.height() + 1) * zoomFactor },
+		    { sprite.width() * zoomFactor, sprite.height() * zoomFactor }
+		});
+	}
+#endif
 	if (stextflag == TalkID::None && (bItem - 1 == pcursitem || AutoMapShowItems)) {
 		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
@@ -1159,6 +1168,9 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
  */
 void DrawView(const Surface &out, Point startPosition)
 {
+#ifdef __IPHONEOS__
+	ClearRenderedItemTargets();
+#endif
 #ifdef _DEBUG
 	DebugCoordsMap.clear();
 #endif

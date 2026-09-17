@@ -312,7 +312,7 @@ bool gmenu_on_mouse_move()
 	return true;
 }
 
-bool gmenu_left_mouse(bool isDown)
+bool gmenu_left_mouse(bool isDown, bool requireSecondClick)
 {
 	if (!isDown) {
 		if (isDraggingSlider) {
@@ -348,8 +348,12 @@ bool gmenu_left_mouse(bool isDown)
 	if (MousePosition.x > screenWidth / 2 + w / 2) {
 		return true;
 	}
+	const bool wasSelected = sgpCurrItem == pItem;
 	sgpCurrItem = pItem;
-	PlaySFX(IS_TITLEMOV);
+	if (!wasSelected)
+		PlaySFX(IS_TITLEMOV);
+	if (requireSecondClick && !wasSelected)
+		return true;
 	if (pItem->isSlider()) {
 		isDraggingSlider = GmenuMouseIsOverSlider();
 		gmenu_on_mouse_move();

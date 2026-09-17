@@ -87,6 +87,7 @@
 #include "utils/utf8.hpp"
 
 #ifndef USE_SDL1
+#include "controls/touch/event_handlers.h"
 #include "controls/touch/gamepad.h"
 #include "controls/touch/renderers.h"
 #endif
@@ -731,6 +732,16 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		return;
 	case SDL_MOUSEBUTTONDOWN:
 		MousePosition = { event.button.x, event.button.y };
+#ifdef __IPHONEOS__
+		// UIKit can deliver a button press without a preceding pointer-motion
+		// event. Refresh the target at the click coordinates so an external
+		// mouse or trackpad right-click uses the item actually under the pointer.
+		if (event.button.which != DevilutionTouchMouseId && gbRunGame) {
+			InvalidateInventorySlot();
+			ResetItemlabelHighlighted();
+			CheckCursMove();
+		}
+#endif
 		HandleMouseButtonDown(event.button.button, modState);
 		return;
 	case SDL_MOUSEBUTTONUP:

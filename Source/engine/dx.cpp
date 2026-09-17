@@ -225,6 +225,12 @@ void RenderPresent()
 	}
 
 #ifndef USE_SDL1
+#ifdef __IPHONEOS__
+	const bool renderVirtualGamepad = ControlMode == ControlTypes::VirtualGamepad || *sgOptions.Controller.showTouchControls;
+#else
+	const bool renderVirtualGamepad = ControlMode == ControlTypes::VirtualGamepad;
+#endif
+
 	if (renderer != nullptr) {
 		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { // pitch is 2560
 			ErrSdl();
@@ -241,7 +247,7 @@ void RenderPresent()
 		if (SDL_RenderCopy(renderer, texture.get(), nullptr, nullptr) <= -1) {
 			ErrSdl();
 		}
-		if (ControlMode == ControlTypes::VirtualGamepad) {
+		if (renderVirtualGamepad) {
 			RenderVirtualGamepad(renderer);
 		}
 		SDL_RenderPresent(renderer);
@@ -250,7 +256,7 @@ void RenderPresent()
 			LimitFrameRate();
 		}
 	} else {
-		if (ControlMode == ControlTypes::VirtualGamepad) {
+		if (renderVirtualGamepad) {
 			RenderVirtualGamepad(surface);
 		}
 		if (SDL_UpdateWindowSurface(ghMainWnd) <= -1) {

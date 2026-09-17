@@ -58,7 +58,12 @@ void NewCursor(int cursId);
 void InitLevelCursor();
 void CheckRportal();
 void CheckTown();
-void CheckCursMove();
+void CheckCursMove(bool useTouchItemTargeting = false);
+
+#ifdef __IPHONEOS__
+void ClearRenderedItemTargets();
+void AddRenderedItemTarget(int8_t itemId, Rectangle bounds);
+#endif
 
 void DrawSoftwareCursor(const Surface &out, Point position, int cursId);
 

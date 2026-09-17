@@ -86,10 +86,15 @@ void InitializeVirtualGamepad()
 	int rightMarginMenuButton1 = rightMarginMenuButton2 + menuPanelButtonSpacing + menuPanelButtonSize.width;
 
 	int padButtonAreaWidth = round(std::sqrt(2) * (padButtonSize + padButtonSpacing));
+	int touchControlsBottom = gnScreenHeight - inputMargin;
+#ifdef __IPHONEOS__
+	// Keep the touch overlay above Diablo's 128-pixel main panel on iPad.
+	touchControlsBottom -= 128;
+#endif
 
 	int padButtonRight = gnScreenWidth - inputMargin - padButtonSize / 2;
 	int padButtonLeft = padButtonRight - padButtonAreaWidth;
-	int padButtonBottom = gnScreenHeight - inputMargin - padButtonSize / 2;
+	int padButtonBottom = touchControlsBottom - padButtonSize / 2;
 	int padButtonTop = padButtonBottom - padButtonAreaWidth;
 
 	Rectangle &charButtonArea = VirtualGamepadState.menuPanel.charButton.area;
@@ -125,7 +130,7 @@ void InitializeVirtualGamepad()
 	VirtualDirectionPad &directionPad = VirtualGamepadState.directionPad;
 	Circle &directionPadArea = directionPad.area;
 	directionPadArea.position.x = inputMargin + directionPadSize / 2;
-	directionPadArea.position.y = gnScreenHeight - inputMargin - directionPadSize / 2;
+	directionPadArea.position.y = touchControlsBottom - directionPadSize / 2;
 	directionPadArea.radius = directionPadSize / 2;
 	directionPad.position = directionPadArea.position;
 

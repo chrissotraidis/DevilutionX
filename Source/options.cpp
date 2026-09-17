@@ -63,6 +63,12 @@ constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::Invisible;
 constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::None;
 #endif
 
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
+constexpr OptionEntryFlags OnlyOnIos = OptionEntryFlags::None;
+#else
+constexpr OptionEntryFlags OnlyOnIos = OptionEntryFlags::Invisible;
+#endif
+
 constexpr size_t NumResamplers =
 #ifdef DEVILUTIONX_RESAMPLER_SPEEX
     1 +
@@ -1143,11 +1149,14 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 
 ControllerOptions::ControllerOptions()
     : OptionCategoryBase("Controller", N_("Controller"), N_("Controller Settings"))
+	, showTouchControls("Show Touch Controls", OnlyOnIos, N_("Touch Controls"), N_("Show the optional movement and action overlay. Direct tap remains available."), false)
 {
 }
 std::vector<OptionEntryBase *> ControllerOptions::GetEntries()
 {
-	return {};
+	return {
+		&showTouchControls,
+	};
 }
 
 NetworkOptions::NetworkOptions()

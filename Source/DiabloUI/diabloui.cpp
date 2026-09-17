@@ -12,6 +12,9 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "controls/plrctrls.h"
+#ifdef __IPHONEOS__
+#include "controls/touch/event_handlers.h"
+#endif
 #include "diablo.h"
 #include "discord/discord.h"
 #include "engine/assets.hpp"
@@ -769,10 +772,57 @@ void UiClearScreen()
 		SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 }
 
+int PollUiEvent(SDL_Event *event)
+{
+	while (PollEvent(event) != 0) {
+#ifdef __IPHONEOS__
+		if (IsAnyOf(event->type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP) && event->button.which == SDL_TOUCH_MOUSEID)
+			continue;
+		if (event->type == SDL_MOUSEMOTION && event->motion.which == SDL_TOUCH_MOUSEID)
+			continue;
+		if (event->type == SDL_MOUSEWHEEL && event->wheel.which == SDL_TOUCH_MOUSEID)
+			continue;
+
+		if (IsAnyOf(event->type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
+			if (!IsDirectTouchEvent(event->tfinger))
+				continue;
+			const Point position {
+				static_cast<int>(event->tfinger.x * gnScreenWidth),
+				static_cast<int>(event->tfinger.y * gnScreenHeight)
+			};
+			MousePosition = position;
+
+			SDL_Event mouseEvent {};
+			if (event->type == SDL_FINGERMOTION) {
+				mouseEvent.motion.type = SDL_MOUSEMOTION;
+				mouseEvent.motion.timestamp = event->tfinger.timestamp;
+				mouseEvent.motion.windowID = event->tfinger.windowID;
+				mouseEvent.motion.which = DevilutionTouchMouseId;
+				mouseEvent.motion.x = position.x;
+				mouseEvent.motion.y = position.y;
+			} else {
+				mouseEvent.button.type = event->type == SDL_FINGERDOWN ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
+				mouseEvent.button.timestamp = event->tfinger.timestamp;
+				mouseEvent.button.windowID = event->tfinger.windowID;
+				mouseEvent.button.which = DevilutionTouchMouseId;
+				mouseEvent.button.button = SDL_BUTTON_LEFT;
+				mouseEvent.button.state = event->type == SDL_FINGERDOWN ? SDL_PRESSED : SDL_RELEASED;
+				mouseEvent.button.clicks = 1;
+				mouseEvent.button.x = position.x;
+				mouseEvent.button.y = position.y;
+			}
+			*event = mouseEvent;
+		}
+#endif
+		return 1;
+	}
+	return 0;
+}
+
 void UiPollAndRender(std::optional<tl::function_ref<bool(SDL_Event &)>> eventHandler)
 {
 	SDL_Event event;
-	while (PollEvent(&event) != 0) {
+	while (PollUiEvent(&event) != 0) {
 		if (eventHandler && (*eventHandler)(event))
 			continue;
 		UiFocusNavigation(&event);
@@ -942,23 +992,18 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 
 	index += listOffset;
 
-	if (gfnListFocus != nullptr && SelectedItem != index) {
+	if (SelectedItem != index) {
 		UiFocus(index, true, false);
 #ifdef USE_SDL1
 		dbClickTimer = SDL_GetTicks();
-	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
-#else
-	} else if (gfnListFocus == nullptr || event.button.clicks >= 2) {
 #endif
-		if (HasAnyOf(uiList->GetItem(index)->uiFlags, UiFlags::ElementHidden | UiFlags::ElementDisabled))
-			return false;
-		SelectedItem = index;
-		UiFocusNavigationSelect();
-#ifdef USE_SDL1
-	} else {
-		dbClickTimer = SDL_GetTicks();
-#endif
+		return true;
 	}
+
+	if (HasAnyOf(uiList->GetItem(index)->uiFlags, UiFlags::ElementHidden | UiFlags::ElementDisabled))
+		return false;
+	SelectedItem = index;
+	UiFocusNavigationSelect();
 
 	return true;
 }

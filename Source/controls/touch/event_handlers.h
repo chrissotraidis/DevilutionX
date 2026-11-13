@@ -99,4 +99,9 @@ private:
 
 void HandleTouchEvent(SDL_Event &event);
 
+#ifdef __IPHONEOS__
+/** @brief The overlay's current visibility, from the engine's own options and input state. */
+bool TouchOverlayLiveNow();
+#endif
+
 } // namespace devilution

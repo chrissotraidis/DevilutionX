@@ -616,6 +616,7 @@ struct ControllerOptions : OptionCategoryBase {
 
 	/** @brief Show the optional on-screen movement and action controls. */
 	OptionEntryBoolean showTouchControls;
+	OptionEntryBoolean autoHideTouchControls;
 
 	/** @brief SDL Controller mapping, see SDL_GameControllerDB. */
 	char szMapping[1024];

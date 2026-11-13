@@ -1150,12 +1150,21 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 ControllerOptions::ControllerOptions()
     : OptionCategoryBase("Controller", N_("Controller"), N_("Controller Settings"))
 	, showTouchControls("Show Touch Controls", OnlyOnIos, N_("Touch Controls"), N_("Show the optional movement and action overlay. Direct tap remains available."), false)
+	, autoHideTouchControls("Auto-hide Touch Controls with Controller", OnlyOnIos, N_("Auto-hide Touch Controls with Controller"), N_("Hide the touch overlay while you play with a connected controller. Direct tap and the main panel remain available."), true)
 {
+	// Turning the overlay on is the player's "Show Touch Controls": it works
+	// with a controller still connected, so auto-hide stays off until the
+	// player turns it back on. Loading saved options does not run callbacks.
+	showTouchControls.SetValueChangedCallback([this]() {
+		if (*showTouchControls && *autoHideTouchControls)
+			autoHideTouchControls.SetValue(false);
+	});
 }
 std::vector<OptionEntryBase *> ControllerOptions::GetEntries()
 {
 	return {
 		&showTouchControls,
+		&autoHideTouchControls,
 	};
 }
 

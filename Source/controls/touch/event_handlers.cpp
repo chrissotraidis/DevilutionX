@@ -2,6 +2,8 @@
 
 #include "control.h"
 #include "controls/plrctrls.h"
+#include "controls/devices/game_controller.h"
+#include "controls/touch/visibility.hpp"
 #include "cursor.h"
 #include "diablo.h"
 #include "engine.h"
@@ -431,10 +433,24 @@ void HandleTouchEvent(SDL_Event &event)
 	HandleStashPanelInteraction(event);
 }
 
+#ifdef __IPHONEOS__
+bool TouchOverlayLiveNow()
+{
+	// ControlDevice is the engine's own input switching: it becomes Gamepad on
+	// controller input and leaves it on touch or pointer input.
+	return TouchOverlayLive(*sgOptions.Controller.showTouchControls,
+	    *sgOptions.Controller.autoHideTouchControls,
+	    !GameController::All().empty(),
+	    ControlDevice == ControlTypes::Gamepad,
+	    IsLeftPanelOpen() || IsRightPanelOpen());
+}
+#endif
+
 bool VirtualGamepadEventHandler::Handle(const SDL_Event &event)
 {
 #ifdef __IPHONEOS__
-	if (!*sgOptions.Controller.showTouchControls || IsLeftPanelOpen() || IsRightPanelOpen()) {
+	if (!TouchOverlayLiveNow()) {
+		// Hidden controls must not keep a held button or the stick alive.
 		VirtualGamepadState.Deactivate();
 		VirtualGamepadState.isActive = true;
 		return false;

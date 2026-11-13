@@ -1,6 +1,7 @@
 #include "controls/touch/renderers.h"
 
 #include "control.h"
+#include "controls/touch/event_handlers.h"
 #include "cursor.h"
 #include "diablo.h"
 #include "doom.h"
@@ -266,8 +267,9 @@ void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 
 #ifdef __IPHONEOS__
 	// Native panels are directly touchable. Hide the overlay while they are open
-	// so it never covers their controls.
-	if (!*sgOptions.Controller.showTouchControls || IsLeftPanelOpen() || IsRightPanelOpen())
+	// so it never covers their controls; auto-hide also hides it while a
+	// controller is in use.
+	if (!TouchOverlayLiveNow())
 		return;
 #endif
 

@@ -1931,7 +1931,7 @@ void InitPadmapActions()
 	    "PrimaryAction",
 	    N_("Primary action"),
 	    N_("Attack monsters, talk to towners, lift and place inventory items."),
-	    ControllerButton_BUTTON_B,
+	    ControllerButton_BUTTON_A,
 	    [] {
 		    ControllerActionHeld = GameActionType_PRIMARY_ACTION;
 		    LastMouseButtonAction = MouseActionType::None;
@@ -1976,7 +1976,7 @@ void InitPadmapActions()
 	    "CancelAction",
 	    N_("Cancel action"),
 	    N_("Close menus."),
-	    ControllerButton_BUTTON_A,
+	    ControllerButton_BUTTON_B,
 	    [] {
 		    if (DoomFlag) {
 			    doom_close();

@@ -358,6 +358,21 @@ bool HardwareCursorSupported()
 
 void LoadOptions()
 {
+	// DevilTouch: gameplay used to attack with B and cancel with A, the reverse of
+	// an Xbox or PlayStation controller and of DevilutionX's own menus. Move a saved
+	// copy of that old default once; a mapping the player chose is left alone.
+	if (!GetIniBool("Padmapping", "DevilTouchXboxLayout", false)) {
+		std::array<char, 16> primary {};
+		std::array<char, 16> cancel {};
+		GetIniValue("Padmapping", "PrimaryAction", primary.data(), primary.size(), "");
+		GetIniValue("Padmapping", "CancelAction", cancel.data(), cancel.size(), "");
+		if (string_view(primary.data()) == "B" && string_view(cancel.data()) == "A") {
+			SetIniValue("Padmapping", "PrimaryAction", "A");
+			SetIniValue("Padmapping", "CancelAction", "B");
+		}
+		SetIniValue("Padmapping", "DevilTouchXboxLayout", true);
+	}
+
 	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
 		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
 			pEntry->LoadFromIni(pCategory->GetKey());

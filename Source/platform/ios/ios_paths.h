@@ -4,6 +4,7 @@
 extern "C" {
 #endif
 
+extern int IOSDeviceIsIPad();
 extern char *IOSGetPrefPath();
 
 #ifdef __cplusplus

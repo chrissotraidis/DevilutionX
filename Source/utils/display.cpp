@@ -1,5 +1,9 @@
 #include "utils/display.h"
 
+#ifdef __APPLE__
+#include "platform/ios/ios_paths.h"
+#endif
+
 #include <algorithm>
 #include <cstdint>
 
@@ -302,7 +306,13 @@ bool SpawnWindow(const char *lpWindowName)
 #ifndef USE_SDL1
 	initFlags |= SDL_INIT_GAMECONTROLLER;
 
+#ifdef __IPHONEOS__
+	SDL_SetHint(SDL_HINT_ORIENTATIONS, IOSDeviceIsIPad()
+	        ? "Portrait PortraitUpsideDown LandscapeLeft LandscapeRight"
+	        : "LandscapeLeft LandscapeRight");
+#else
 	SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+#endif
 #endif
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();

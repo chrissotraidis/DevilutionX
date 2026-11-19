@@ -436,12 +436,11 @@ void HandleTouchEvent(SDL_Event &event)
 #ifdef __IPHONEOS__
 bool TouchOverlayLiveNow()
 {
-	// ControlDevice is the engine's own input switching: it becomes Gamepad on
-	// controller input and leaves it on touch or pointer input.
+	// Use connection state so the overlay hides as soon as a controller is connected.
 	return TouchOverlayLive(*sgOptions.Controller.showTouchControls,
 	    *sgOptions.Controller.autoHideTouchControls,
 	    !GameController::All().empty(),
-	    ControlDevice == ControlTypes::Gamepad,
+	    true,
 	    IsLeftPanelOpen() || IsRightPanelOpen());
 }
 #endif

@@ -1,10 +1,16 @@
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #include "ios_paths.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+int IOSDeviceIsIPad()
+{
+    return UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+}
 
 char *IOSGetPrefPath()
 {

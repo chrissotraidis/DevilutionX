@@ -2094,7 +2094,7 @@ void InitPadmapActions()
 	    "DisplaySpells",
 	    N_("Speedbook"),
 	    N_("Open Speedbook."),
-	    ControllerButton_BUTTON_A,
+	    ControllerButton_BUTTON_B,
 	    [] {
 		    ProcessGameAction(GameAction { GameActionType_TOGGLE_QUICK_SPELL_MENU });
 	    },

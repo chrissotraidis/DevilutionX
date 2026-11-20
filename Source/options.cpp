@@ -360,17 +360,25 @@ void LoadOptions()
 {
 	// DevilTouch: gameplay used to attack with B and cancel with A, the reverse of
 	// an Xbox or PlayStation controller and of DevilutionX's own menus. Move a saved
-	// copy of that old default once; a mapping the player chose is left alone.
-	if (!GetIniBool("Padmapping", "DevilTouchXboxLayout", false)) {
+	// copy of that old default once; a mapping the player chose is left alone. The
+	// Speedbook shares the cancel button (one works in menus, the other in play).
+	if (!GetIniBool("Padmapping", "DevilTouchXboxLayout2", false)) {
 		std::array<char, 16> primary {};
 		std::array<char, 16> cancel {};
+		std::array<char, 16> speedbook {};
 		GetIniValue("Padmapping", "PrimaryAction", primary.data(), primary.size(), "");
 		GetIniValue("Padmapping", "CancelAction", cancel.data(), cancel.size(), "");
+		GetIniValue("Padmapping", "DisplaySpells", speedbook.data(), speedbook.size(), "");
 		if (string_view(primary.data()) == "B" && string_view(cancel.data()) == "A") {
 			SetIniValue("Padmapping", "PrimaryAction", "A");
 			SetIniValue("Padmapping", "CancelAction", "B");
+			primary = { 'A' };
+			cancel = { 'B' };
 		}
-		SetIniValue("Padmapping", "DevilTouchXboxLayout", true);
+		// The first version of this move left the Speedbook on A, over the attack.
+		if (string_view(primary.data()) == "A" && string_view(cancel.data()) == "B" && string_view(speedbook.data()) == "A")
+			SetIniValue("Padmapping", "DisplaySpells", "B");
+		SetIniValue("Padmapping", "DevilTouchXboxLayout2", true);
 	}
 
 	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
